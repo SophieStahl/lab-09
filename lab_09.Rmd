@@ -138,10 +138,7 @@ The publication can be found in [Goolsby et al. (2013) *Environmental Toxicology
 16. Create a new column in `toxicity` called `no_int_TU` (toxic units assuming no interactive effects between mixtures) -- fill it with `pmax(diphen_TU,sert_TU)`. Additionally, create a new dataset called `additive_dat` filtered from `toxicity` where `diphen == 0 | sert == 0`. I wrote the next part for you because it's a bit complicated -- just un-comment it once you're done, and it should work (if you followed the steps correctly). NOTE: to un-comment multiple lines at once, highlight the area, and hold down Ctrl Shift C. This allows you to mass un-comment or comment code.
 
 ```{r}
-toxicity <- toxicity %>% 
-  mutate(no_int_TU = pmax(diphen_TU,sert_TU))
-additive_dat <- toxicity %>% 
-  filter(diphen == 0 | sert == 0)
+
 
 # additive_glm <- glm(cbind(dead,n-dead)~total_TU,data = additive_dat,family = binomial())
 # actual_glm <- glm(cbind(dead,n-dead)~total_TU,data = toxicity,family = binomial())
