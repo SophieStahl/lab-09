@@ -1,0 +1,168 @@
+---
+title: "Lab 9"
+author: "Your Name"
+date: "10/21/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+- Add your name to the author field on line 3, then switch to visual markdown editor.
+- Run the above code chunk to load `tidyverse`.
+- When possible, use `tidyverse` (`ggplot` and `dplyr`) instead of base R.
+   - I recommend formatting/spacing your code like this hypothetical example:
+
+```{r eval=FALSE}
+dat %>% 
+  select(-Species) %>%
+  filter(weight < 3) %>%
+  rename(Weight_kg = weight,Height_cm = height) %>%
+  ggplot(mapping = aes(x = weight,y = height)) + 
+    geom_point() + 
+    geom_smooth() + 
+    labs(
+      x = "Weight (kg)",
+      y = "Height (cm)"
+    )
+```
+
+# Introduction
+
+For my undergraduate research, I studied the toxicity of trace pharmaceuticals contamination of surface waters in an organism called *Ceriodaphnia dubia* (water flea). Specifically, I was interested in whether the presence of mixtures of multiple pharmaceuticals caused *additive* or *synergistic* toxicity. The presence of additive or synergistic toxicity wold be alarming, as it would suggest that the thousands of trace compounds present in surface waters could cause ecological harm at unexpectedly low levels.
+
+I selected two common pharmaceuticals to study in mixtures: Benadryl (diphenhydramine) and Zoloft (sertraline), with 117 treatment concentrations of mixtures of diphenhydramine (0.0-4.5 mg/L) and sertraline (0.0-0.6 mg/L), with 4 replicates per treatment. This allowed me to fit mortality dose-response curves for each chemically individually, as well as in combination.
+
+The publication can be found in [Goolsby et al. (2013) *Environmental Toxicology & Chemistry*](https://setac.onlinelibrary.wiley.com/doi/abs/10.1002/etc.2378). You can open the PDF [here](https://plantevoecophys.files.wordpress.com/2013/10/goolsby-etc.pdf).
+
+1. In the top-right pane of RStudio (Environment tab), click **Import Dataset** then **From Excel**. Then click **Browse**, then select the **data**, then select **toxicity.xlsx**. A code preview will be generated for you in the bottom right corner of the window. Copy the first two lines (you should see `library(readxl)` and then a line that begins with `toxicity <- `), then click **Cancel**. Then paste those two lines of code in the R code chunk below, and run it.
+
+```{r}
+
+```
+
+2. Locate the file on your computer, and open it in Excel (or open it with Google Sheets if you don't have Excel). The first and second columns correspond to `diphenhydramine` and `sertraline` (respectively) concentrations in `mg/L`. The third column (`dead`) is the number of individuals in a particular replicate that died, and the fourth column `n` contains the total number of individuals.
+
+3. Using `tidyverse` (`dplyr`), create a new column in `toxicity` called `prop` (short for proportion). It should contain `dead` divided by `n`. Don't just run the code -- be sure to overwrite `toxicity` so the new column is saved (i.e., your could should begin with `toxicity <- toxicity %>%`). After running the code, check to make sure it worked correctly!
+
+```{r}
+
+```
+
+4. Create a subset of the dataset called `diphen_dat`. Use `dplyr` (`tidyverse`) to filter only rows of `toxicity` that contain concentrations where `sert` equals zero. Also, rename the column `diphen` to `conc` (short for concentration). (again, check to make sure it worked correctly -- do this for every problem)
+
+```{r}
+
+```
+
+5. Create a dataset called `sert_dat` to filter only rows that contain concentrations where `diphen` equals zero. Also, rename the column `sert` to `conc`.
+
+```{r}
+
+```
+
+6. Plot the relationship between `conc` and `prop` as a scatterplot for `diphen_dat`, and add a linear trend. Set the color of both the point and the line to **blue**. Optionally, use a different theme.
+
+```{r}
+
+```
+
+7. Plot the relationship between `conc` and `prop` as a scatterplot for `sert_dat`, and add a linear trend. Set the color of both the point and the line to **red**. Use a different theme if desired.
+
+```{r}
+
+```
+
+8. Copy your code from #6, and paste it below. Then, add an additional `geom_point()` in which you add the argument `data = sert_dat` (and set the color to red), and also include an additional `geom_smooth()` including the argument `data = sert_dat` (and set the color to red). The result should be a plot with red points and a red line for `sert_dat`, and blue points and a blue line for `diphen_dat`, all on the same graph.
+
+```{r}
+
+```
+
+9. Linear regressions provide a rough approximation to the risk of mortality for a given dose, but they aren't biologically realistic because the y values of the lines go from negative infinity to positive infinity, whereas the only possible values are from 0 to 1. In the code below, I have written code for a generalized linear model for each chemical, which allows the regression to account for this type of data. In this case, we want to fit a logistic regression, or an S-curve. Un-comment the code to view the results.
+
+```{r}
+# diphen_glm <- glm(cbind(dead,n-dead)~conc,data = diphen_dat,family = binomial())
+# diphen_glm
+# 
+# sert_glm <- glm(cbind(dead,n-dead)~conc,data = sert_dat,family = binomial())
+# sert_glm
+```
+
+10. Now that we have an appropriate model for our data type, let's visualize it. Add a column to `diphen_dat` named `pred`, and set it equal to the predicted values of the model. To do this, you'll need the code `predict(diphen_glm,type = "response")`. Then, do the same thing for `sert_dat` using the `sert_glm` object.
+
+```{r}
+
+```
+
+11. Paste the code from #6 below, but instead of `geom_smooth`, replace it with `geom_line()`, and include the argument `mapping = aes(x = conc, y = pred)` and `color = "blue"` (note: do not include `method = "lm"`). The result should be blue data points, and a smooth blue curve.
+
+```{r}
+
+```
+
+12. Paste the code from #11 below, but replace `diphen_dat` with `sert_dat`. Also, replace `blue` with `red` in both places. (note: This assumes your variable names `conc` and `prop` are the same for `diphen_dat` and `sert_dat`!). The result should be red data points, and a smooth red curve.
+
+```{r}
+
+```
+
+13. Now let's combine the two plots. Look at what you did for #8 to figure this out. (Hint: To start, paste the code for #11.) The result should be blue data points and regression curve for `diphen_dat`, and red data points and regression curve for `sert_dat`.
+
+```{r}
+
+```
+
+14. You'll notice that the diphenhydramine and sertrailne have very different toxicities (i.e., sertraline is toxic at lower doses). Calculate the LC-50 (the concentration of a chemical that is expected to kill 50% of individuals). To do this, you'll need the regression coefficients of each object -- you can use the `coef` function (e.g. `coef(diphen_glm)`), which will return a vector with the intercept in the first position, and the slope in the second position. In the code chunk below, store the LC-50 for diphenhydramine in `diphen_LC50` and sertraline in `sert_LC50` by dividing the intercept by the slope (`conc`), and multiplying the result by negative 1. Print both values after creating the variables. If you do this correctly, you should find that the LC-50 for diphenhydramine is about 3.85, and the LC-50 for sertraline is about 0.43.
+
+```{r}
+
+```
+
+15. In addition to being a good descriptor of toxicity, the LC-50 allows us to standardize chemical concentrations in what are called **toxic units**. Toxic units allow us to model the mixtures of multiple chemicals. To do this, simply divide the concentration of each chemical by their LC-50. In the code chunk below, create two new columns in `toxicity`: `diphen_TU` and `sert_TU`, which should contain the toxic units of each chemical. Then, create a new column called `total_TU`, which is the sume of `diphen_TU` and `sert_TU`. 
+
+```{r}
+
+```
+
+16. Next, plot the toxic units of each chemical, as follows. For treatments where diphen and sert both equal zero (controls), plot them in black. For treatments where sert equals zero but diphen is greater than zero, plot them in blue. For treatments where diphen equals zero but sert is greater than zero, plot them in red. For treatments where both diphen and sert are greater than zero, plot them in purple. This will be a bit of a challenge. I suggest creating a new dataset for controls, diphen_only, sert_only, and mixtures, and then plot them on the same graph in the same way we did for #8 and #13. You'll only need to set mapping once as `aes(x = total_TU,y = prop)` and then simply change out the dataset (and the color) each time you use `geom_point()`.
+
+```{r}
+
+```
+
+16. Create a new column in `toxicity` called `no_int_TU` (toxic units assuming no interactive effects between mixtures) -- fill it with `pmax(diphen_TU,sert_TU)`. Additionally, create a new dataset called `additive_dat` filtered from `toxicity` where `diphen == 0 | sert == 0`. I wrote the next part for you because it's a bit complicated -- just un-comment it once you're done, and it should work (if you followed the steps correctly). NOTE: to un-comment multiple lines at once, highlight the area, and hold down Ctrl Shift C. This allows you to mass un-comment or comment code.
+
+```{r}
+toxicity <- toxicity %>% 
+  mutate(no_int_TU = pmax(diphen_TU,sert_TU))
+additive_dat <- toxicity %>% 
+  filter(diphen == 0 | sert == 0)
+
+# additive_glm <- glm(cbind(dead,n-dead)~total_TU,data = additive_dat,family = binomial())
+# actual_glm <- glm(cbind(dead,n-dead)~total_TU,data = toxicity,family = binomial())
+# toxicity <- toxicity %>%
+#   mutate(actual_prop = predict(actual_glm,type = "response"),
+#          additive_prop = predict(additive_glm,newdata = data.frame(total_TU = toxicity$total_TU),type = "response"),
+#          no_int_prop = predict(additive_glm,newdata = data.frame(total_TU = toxicity$no_int_TU),type = "response"))
+# 
+# no_int_glm <- glm(no_int_prop~total_TU,data = toxicity,family = quasibinomial())
+# toxicity <- toxicity %>%
+#   mutate(no_int_prop = predict(no_int_glm,type = "response"))
+
+```
+
+17. Paste the plot from #15 below, and then add a `geom_line` with `data = toxicity` and `mapping = aes(x = total_TU,y = actual_prop)`. Then add another `geom_line` with `data = toxicity` and `mapping = aes(x = total_TU_TU,y = additive_prop)` with `color = "red"`. Finally, add another `geom_line` with `data = toxicity` and `mapping = aes(x = total_TU,y = no_int_prop)` with `color = "blue"`.
+
+```{r}
+
+```
+
+For #17, the red line indicates the expected mixture toxicity if the results were purely additive. The blue line indicates the expected mixture toxicity if the chemicals didn't interact at all. The black line indicates the actual mixture toxicity. We can see that the black line is to the right of the red line, which means that the actual mixture toxicity is *less than additive*. However, the black line is to the left of the blue line, which means the compounds do still exhibit some combined toxicity. In fact, for some treatments, combined of concentrations of individually sub-lethal doses of diphenhydramine and sertraline resulted in 100% lethal mixtures.
+
+- When you are finished, Knit (resolve any errors so that it Knits successfully), then commit and push to GitHub.
+- Then upload the HTML and Rmd files to the Webcourses assignment.
