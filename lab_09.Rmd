@@ -33,7 +33,7 @@ dat %>%
 
 # Introduction
 
-For my undergraduate research, I studied the toxicity of trace pharmaceuticals contamination of surface waters in an organism called *Ceriodaphnia dubia* (water flea). Specifically, I was interested in whether the presence of mixtures of multiple pharmaceuticals caused *additive* or *synergistic* toxicity. The presence of additive or synergistic toxicity wold be alarming, as it would suggest that the thousands of trace compounds present in surface waters could cause ecological harm at unexpectedly low levels.
+For my undergraduate research, I studied the toxicity of trace pharmaceuticals contamination of surface waters in an organism called *Ceriodaphnia dubia* (water flea). Specifically, I was interested in whether the presence of mixtures of multiple pharmaceuticals caused *additive* or *synergistic* toxicity. The presence of additive or synergistic toxicity would be alarming, as it would suggest that the thousands of trace compounds present in surface waters could cause ecological harm at unexpectedly low levels.
 
 I selected two common pharmaceuticals to study in mixtures: Benadryl (diphenhydramine) and Zoloft (sertraline), with 117 treatment concentrations of mixtures of diphenhydramine (0.0-4.5 mg/L) and sertraline (0.0-0.6 mg/L), with 4 replicates per treatment. This allowed me to fit mortality dose-response curves for each chemically individually, as well as in combination.
 
@@ -47,7 +47,7 @@ The publication can be found in [Goolsby et al. (2013) *Environmental Toxicology
 
 2. Locate the file on your computer, and open it in Excel (or open it with Google Sheets if you don't have Excel). The first and second columns correspond to `diphenhydramine` and `sertraline` (respectively) concentrations in `mg/L`. The third column (`dead`) is the number of individuals in a particular replicate that died, and the fourth column `n` contains the total number of individuals.
 
-3. Using `tidyverse` (`dplyr`), create a new column in `toxicity` called `prop` (short for proportion). It should contain `dead` divided by `n`. Don't just run the code -- be sure to overwrite `toxicity` so the new column is saved (i.e., your could should begin with `toxicity <- toxicity %>%`). After running the code, check to make sure it worked correctly!
+3. Using `tidyverse` (`dplyr`), create a new column in `toxicity` called `prop` (short for proportion). It should contain `dead` divided by `n`. Don't just run the code -- be sure to overwrite `toxicity` so the new column is saved (i.e., your code should begin with `toxicity <- toxicity %>%`). After running the code, check to make sure it worked correctly!
 
 ```{r}
 
@@ -117,13 +117,13 @@ The publication can be found in [Goolsby et al. (2013) *Environmental Toxicology
 
 ```
 
-14. You'll notice that the diphenhydramine and sertrailne have very different toxicities (i.e., sertraline is toxic at lower doses). Calculate the LC-50 (the concentration of a chemical that is expected to kill 50% of individuals). To do this, you'll need the regression coefficients of each object -- you can use the `coef` function (e.g. `coef(diphen_glm)`), which will return a vector with the intercept in the first position, and the slope in the second position. In the code chunk below, store the LC-50 for diphenhydramine in `diphen_LC50` and sertraline in `sert_LC50` by dividing the intercept by the slope (`conc`), and multiplying the result by negative 1. Print both values after creating the variables. If you do this correctly, you should find that the LC-50 for diphenhydramine is about 3.85, and the LC-50 for sertraline is about 0.43.
+14. You'll notice that the diphenhydramine and sertraline have very different toxicities (i.e., sertraline is toxic at lower doses). Calculate the LC-50 (the concentration of a chemical that is expected to kill 50% of individuals). To do this, you'll need the regression coefficients of each object -- you can use the `coef` function (e.g. `coef(diphen_glm)`), which will return a vector with the intercept in the first position, and the slope in the second position. In the code chunk below, store the LC-50 for diphenhydramine in `diphen_LC50` and sertraline in `sert_LC50` by dividing the intercept by the slope (`conc`), and multiplying the result by negative 1. Print both values after creating the variables. If you do this correctly, you should find that the LC-50 for diphenhydramine is about 3.85, and the LC-50 for sertraline is about 0.43.
 
 ```{r}
 
 ```
 
-15. In addition to being a good descriptor of toxicity, the LC-50 allows us to standardize chemical concentrations in what are called **toxic units**. Toxic units allow us to model the mixtures of multiple chemicals. To do this, simply divide the concentration of each chemical by their LC-50. In the code chunk below, create two new columns in `toxicity`: `diphen_TU` and `sert_TU`, which should contain the toxic units of each chemical. Then, create a new column called `total_TU`, which is the sume of `diphen_TU` and `sert_TU`. 
+15. In addition to being a good descriptor of toxicity, the LC-50 allows us to standardize chemical concentrations in what are called **toxic units**. Toxic units allow us to model the mixtures of multiple chemicals. To do this, simply divide the concentration of each chemical by their LC-50. In the code chunk below, create two new columns in `toxicity`: `diphen_TU` and `sert_TU`, which should contain the toxic units of each chemical. Then, create a new column called `total_TU`, which is the sum of `diphen_TU` and `sert_TU`. 
 
 ```{r}
 
